@@ -20,7 +20,7 @@ func init() {
 	// format
 	formater := new(logrus.TextFormatter)
 	formater.FullTimestamp = true
-	formater.TimestampFormat = "2006-01-01 00:00:00"
+	formater.TimestampFormat = "2006-01-02 15:04:05"
 	formater.DisableTimestamp = false
 	formater.DisableColors = false
 	Log.SetFormatter(formater)
@@ -37,6 +37,6 @@ func SetLogFile(file string) error {
 		Log.Fatal(err)
 		return err
 	}
-	logrus.SetOutput(logfile)
+	Log.SetOutput(logfile)
 	return nil
 }

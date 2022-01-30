@@ -46,10 +46,12 @@ Examples:
 // default properties
 func init() {
 	Properties = &ConfigProperties{
-		Bind:     "127.0.0.1",
-		Port:     6379,
-		Timeout:  0,
-		Database: 16,
+		Bind:      "127.0.0.1",
+		Port:      6379,
+		Timeout:   0,
+		Daemonize: false,
+		Logfile:   "",
+		Database:  16,
 	}
 }
 

@@ -9,9 +9,11 @@ package main
 import (
 	"fmt"
 	"os"
+	"time"
 
 	"github.com/HTmonster/redissgo/internal/config"
 	"github.com/HTmonster/redissgo/internal/logger"
+	"github.com/sevlyar/go-daemon"
 )
 
 var banner = `                  ___                     
@@ -22,8 +24,7 @@ var banner = `                  ___
                             /____/          %s
  `
 
-// var serverProperties = config.Properties
-var serverProperties *config.ConfigProperties
+var serverProperties = config.Properties
 var pid int
 
 func init() {
@@ -31,12 +32,49 @@ func init() {
 	pid = os.Getpid()
 	// parse configuration file or arg
 	serverProperties, _ := config.ParseConfig(os.Args[1:])
+	// log output set
+	if serverProperties.Logfile != "" {
+		logger.SetLogFile(serverProperties.Logfile)
+	} else {
+		// banner
+		fmt.Printf(banner, pid, serverProperties.Port, config.Version)
+	}
 	// log
 	logger.Log.Info("# oO0OoO0OoO0Oo redissgo is starting oO0OoO0OoO0Oo")
-	// banner
-	fmt.Printf(banner, pid, serverProperties.Port, config.Version)
+}
+
+/**
+ * @description: run server in daemon mode
+ */
+func initDaemon() {
+	context := new(daemon.Context)
+	child, _ := context.Reborn()
+	if child != nil {
+		logger.Log.Info("= init daemon succeeded PID=", os.Getpid(), " Exit")
+		os.Exit(0)
+		return
+	} else {
+		defer func() {
+			if err := context.Release(); err != nil {
+				logger.Log.Error("Unable to release pid-file: %s", err.Error())
+			}
+		}()
+
+		logger.Log.Info("= init daemon succeeded PID=", os.Getpid(), " Born")
+	}
 }
 
 func main() {
+
+	// Daemonize?
+	if serverProperties.Daemonize {
+		initDaemon()
+	}
+
+	// test stub
+	for {
+		time.Sleep(10 * time.Second)
+		fmt.Println("sss")
+	}
 
 }
