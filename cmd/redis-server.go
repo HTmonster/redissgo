@@ -9,10 +9,10 @@ package main
 import (
 	"fmt"
 	"os"
-	"time"
 
 	"github.com/HTmonster/redissgo/internal/config"
 	"github.com/HTmonster/redissgo/internal/logger"
+	"github.com/HTmonster/redissgo/server"
 	"github.com/sevlyar/go-daemon"
 )
 
@@ -71,10 +71,9 @@ func main() {
 		initDaemon()
 	}
 
-	// test stub
-	for {
-		time.Sleep(10 * time.Second)
-		fmt.Println("sss")
+	// setup server
+	if err := server.SetupAndListen(serverProperties.Bind, serverProperties.Port); err != nil {
+		logger.Log.Error(err)
 	}
 
 }
