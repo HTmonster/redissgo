@@ -9,10 +9,21 @@
 
 `redissgo` is a Redis-server that is implemented by Golang.
 
-# run
+# Run
 ```shell
 ./redis-server
 ./redis-server --port 3000 --bind 127.0.0.1
 ./redis-server /etc/redis/redis.conf
 ```
 ![run_server](docs/images/run_server.png)
+
+# Design and implementation
+
+## Datastruct
+
+### Underlying datastruct difference
+
+| redis | redissgo|Note|
+|-------|---------|----|
+|SDS(Simple Dynamic String)| build-in `string`(byte slice)||
+
